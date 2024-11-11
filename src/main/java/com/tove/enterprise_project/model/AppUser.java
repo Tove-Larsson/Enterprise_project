@@ -2,6 +2,9 @@ package com.tove.enterprise_project.model;
 
 import com.tove.enterprise_project.authorities.UserRole;
 import jakarta.persistence.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -40,6 +43,10 @@ public class AppUser {
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.isEnabled = isEnabled;
+    }
+
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        return userRole.getAuthorities();
     }
 
     public Long getId() {

@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        return null;
+        return new CustomUserDetail(appUser);
     }
 
 
