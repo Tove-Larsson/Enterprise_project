@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.tove.enterprise_project.authorities.UserRole.*;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -28,10 +29,17 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login").permitAll()
-
+                        .requestMatchers("/", "/login", "/dev/**").permitAll()
+                        .requestMatchers("/user").hasRole(USER.name())
+                        .requestMatchers("/admin").hasRole(ADMIN.name())
+                        .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults());
+                .formLogin(withDefaults())
+
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                )
+                .authenticationProvider(authProvider());
 
         return http.build();
     }
