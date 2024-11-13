@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -28,11 +29,14 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/dev/**").permitAll()
-                        .requestMatchers("/user").hasRole(USER.name())
-                        .requestMatchers("/admin").hasRole(ADMIN.name())
+                        .requestMatchers("/userpage").hasRole(USER.name())
+                        .requestMatchers("/adminpage").hasRole(ADMIN.name())
                         .anyRequest().authenticated()
+
+                        // Research why we can not reach /user/register with post
                 )
                 .formLogin(withDefaults())
 

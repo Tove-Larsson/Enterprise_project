@@ -39,3 +39,4 @@ out/
 ## Custom ##
 src/main/resources/application.properties
 src/main/java/com/tove/enterprise_project/controller/TestController.java
+src/main/java/com/tove/enterprise_project/config/WebMvcConfig.java
