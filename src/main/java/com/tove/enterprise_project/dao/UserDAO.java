@@ -5,9 +5,5 @@ import java.util.Optional;
 
 public interface UserDAO {
 
-    void save(AppUser appUser);
-    void update(AppUser appUser);
-    void delete(AppUser appUser);
-    Optional<AppUser> findById(Long id);
     Optional<AppUser> findByUsername(String username);
 }
