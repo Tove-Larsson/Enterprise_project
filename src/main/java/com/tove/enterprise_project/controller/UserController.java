@@ -5,10 +5,10 @@ import com.tove.enterprise_project.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -25,6 +25,20 @@ public class UserController {
     public ResponseEntity<AppUserDTO> registerUser(@Valid @RequestBody AppUserDTO appUserDTO) {
 
         return userService.createUser(appUserDTO);
+    }
+
+
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<AppUserDTO> deleteUser(Authentication authentication) {
+        return userService.deleteAuthenticatedUser(authentication);
+    }
+
+    @GetMapping("/test")
+    public String test(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("DEBUGGING TEST");
+        System.out.println(userDetails.getUsername());
+
+        return userDetails.getUsername();
     }
 
 

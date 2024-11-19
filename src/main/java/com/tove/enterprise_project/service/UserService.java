@@ -5,6 +5,8 @@ import com.tove.enterprise_project.model.dto.AppUserDTO;
 import com.tove.enterprise_project.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +43,14 @@ public class UserService {
         userRepository.save(appUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(appUserDTO);
+    }
+
+    public ResponseEntity<AppUserDTO> deleteAuthenticatedUser(Authentication authentication) {
+        String username = authentication.getName();
+        AppUser appUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        userRepository.delete(appUser);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new AppUserDTO(appUser.getUsername()));
     }
 }

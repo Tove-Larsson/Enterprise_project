@@ -14,4 +14,7 @@ public record AppUserDTO(
         @NotBlank(message = "Your password can not be blank")
         String password
 ) {
+        public AppUserDTO(String username) {
+                this(username, "");
+        }
 }
