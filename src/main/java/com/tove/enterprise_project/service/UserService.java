@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.tove.enterprise_project.authorities.UserRole.USER;
 
@@ -23,7 +24,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    @Transactional
     public ResponseEntity<AppUserDTO> createUser(AppUserDTO appUserDTO) {
 
         AppUser appUser = new AppUser(
@@ -45,6 +46,7 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(appUserDTO);
     }
 
+    @Transactional
     public ResponseEntity<AppUserDTO> deleteAuthenticatedUser(Authentication authentication) {
         String username = authentication.getName();
         AppUser appUser = userRepository.findByUsername(username)
