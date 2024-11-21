@@ -24,7 +24,7 @@ public class CorsConfig {
         corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/user/**", corsConfiguration); // Backend
+        source.registerCorsConfiguration("/**", corsConfiguration); // Backend
 
         return source;
     }
