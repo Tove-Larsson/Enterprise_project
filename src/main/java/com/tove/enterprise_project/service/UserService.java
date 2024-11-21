@@ -1,10 +1,13 @@
 package com.tove.enterprise_project.service;
 
+import com.tove.enterprise_project.jwt.JWTService;
 import com.tove.enterprise_project.model.AppUser;
 import com.tove.enterprise_project.model.dto.AppUserDTO;
 import com.tove.enterprise_project.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +21,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -54,5 +61,15 @@ public class UserService {
 
         userRepository.delete(appUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new AppUserDTO(appUser.getUsername()));
+    }
+
+    public String verify(AppUser appUser) {
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword()));
+
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(appUser.getUsername());
+        }
+        return "Failed";
     }
 }

@@ -55,4 +55,10 @@ public class UserController {
 
     }
 
+    @PostMapping("/login")
+    public String login(@RequestBody AppUser appUser) {
+        System.out.println(appUser);
+        return userService.verify(appUser);
+    }
+
 }
