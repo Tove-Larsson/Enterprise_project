@@ -6,9 +6,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
 public class CorsConfig {
 
@@ -19,8 +16,7 @@ public class CorsConfig {
 
         corsConfiguration.addAllowedOrigin("http://localhost:3000"); // Frontend
         corsConfiguration.addAllowedMethod("*");    // GET POST PUT DELETE
-        corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        corsConfiguration.setExposedHeaders(List.of("Set-Cookie"));
+        corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
