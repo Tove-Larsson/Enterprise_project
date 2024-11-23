@@ -36,19 +36,20 @@ public class UserController {
     @GetMapping("/test")
     public ResponseEntity<AppUserDTO> testFetchUser(@AuthenticationPrincipal UserDetails userDetails) {
 
-        if (userDetails != null) {
-            AppUserDTO appUerDTO = new AppUserDTO(
-                    userDetails.getUsername(),
-                    userDetails.getPassword()
-            );
+        System.out.println("ENTERING TEST----------");
 
-            System.out.println("User " + appUerDTO.username() + " is authenticated");
-
-            return ResponseEntity.ok(appUerDTO);
-        } else {
-
+        if (userDetails == null) {
             return ResponseEntity.ok().body(new AppUserDTO("clarkkent", "superman"));
         }
 
+        AppUserDTO appUserDTO = new AppUserDTO(
+                userDetails.getUsername(),
+                userDetails.getPassword()
+        );
+
+        System.out.println("User " + appUserDTO.username() + " is authenticated");
+
+        return ResponseEntity.ok(appUserDTO);
     }
+
 }
