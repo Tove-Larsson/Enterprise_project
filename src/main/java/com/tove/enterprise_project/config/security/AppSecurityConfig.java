@@ -42,7 +42,7 @@ public class AppSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/dev/**", "/user/**").permitAll()
+                        .requestMatchers("/", "/login", "/dev/**", "/user/**", "/auth/**").permitAll()
                         .requestMatchers("/userpage").hasRole(USER.name())
                         .requestMatchers("/adminpage").hasRole(ADMIN.name())
                         .anyRequest().authenticated()

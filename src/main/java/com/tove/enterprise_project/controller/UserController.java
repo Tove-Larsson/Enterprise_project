@@ -1,8 +1,5 @@
 package com.tove.enterprise_project.controller;
 
-import com.tove.enterprise_project.authorities.UserRole;
-import com.tove.enterprise_project.config.security.CustomUserDetail;
-import com.tove.enterprise_project.model.AppUser;
 import com.tove.enterprise_project.model.dto.AppUserDTO;
 import com.tove.enterprise_project.service.UserService;
 import jakarta.validation.Valid;
@@ -40,25 +37,18 @@ public class UserController {
     public ResponseEntity<AppUserDTO> testFetchUser(@AuthenticationPrincipal UserDetails userDetails) {
 
         if (userDetails != null) {
-            AppUserDTO customUerDTO = new AppUserDTO(
+            AppUserDTO appUerDTO = new AppUserDTO(
                     userDetails.getUsername(),
                     userDetails.getPassword()
             );
 
-            System.out.println("User " + customUerDTO.username() + " is authenticated");
+            System.out.println("User " + appUerDTO.username() + " is authenticated");
 
-            return ResponseEntity.ok(customUerDTO);
+            return ResponseEntity.ok(appUerDTO);
         } else {
 
             return ResponseEntity.ok().body(new AppUserDTO("clarkkent", "superman"));
         }
 
     }
-
-    @PostMapping("/login")
-    public String login(@RequestBody AppUser appUser) {
-        System.out.println(appUser);
-        return userService.verify(appUser);
-    }
-
 }
