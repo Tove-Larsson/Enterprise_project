@@ -3,6 +3,7 @@ package com.tove.enterprise_project.service;
 import com.tove.enterprise_project.jwt.JWTService;
 import com.tove.enterprise_project.model.AppUser;
 import com.tove.enterprise_project.model.dto.AppUserDTO;
+import com.tove.enterprise_project.model.dto.TokenDTO;
 import com.tove.enterprise_project.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,17 +64,14 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new AppUserDTO(appUser.getUsername()));
     }
 
-    public String verify(AppUser appUser) {
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword()));
+    public TokenDTO verify(AppUserDTO appUserDTO) {
 
-        if (authentication.isAuthenticated()) {
-            String generatedToken = jwtService.generateToken(appUser.getUsername());
-            System.out.println("Generated token: " +  generatedToken);
-            return generatedToken;
-        } else {
-            return "Failed authentication";
-        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(appUserDTO.username(), appUserDTO.password()));
+
+        String generatedToken = jwtService.generateToken(appUserDTO.username());
+        System.out.println("Generated token: " + generatedToken);
+        return new TokenDTO(generatedToken);
+
     }
 }
 
