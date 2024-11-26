@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import static com.tove.enterprise_project.authorities.UserRole.*;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity

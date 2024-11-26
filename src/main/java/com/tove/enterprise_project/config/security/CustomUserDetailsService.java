@@ -1,7 +1,7 @@
 package com.tove.enterprise_project.config.security;
 
+import com.tove.enterprise_project.dao.impl.UserDAO;
 import com.tove.enterprise_project.model.AppUser;
-import com.tove.enterprise_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,18 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserDAO userDAO;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        AppUser appUser = userRepository
+        AppUser appUser = userDAO
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 

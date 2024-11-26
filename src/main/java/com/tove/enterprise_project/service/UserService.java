@@ -1,5 +1,6 @@
 package com.tove.enterprise_project.service;
 
+import com.tove.enterprise_project.dao.impl.UserDAO;
 import com.tove.enterprise_project.jwt.JWTService;
 import com.tove.enterprise_project.model.AppUser;
 import com.tove.enterprise_project.model.dto.AppUserDTO;
@@ -24,12 +25,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
+    private final UserDAO userDAO;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService, UserDAO userDAO) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.userDAO = userDAO;
     }
 
     @Transactional
@@ -45,7 +48,7 @@ public class UserService {
                 true
         );
 
-        if (userRepository.findByUsername(appUser.getUsername()).isPresent()) {
+        if (userDAO.findByUsername(appUser.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -57,7 +60,7 @@ public class UserService {
     @Transactional
     public ResponseEntity<AppUserDTO> deleteAuthenticatedUser(Authentication authentication) {
         String username = authentication.getName();
-        AppUser appUser = userRepository.findByUsername(username)
+        AppUser appUser = userDAO.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         userRepository.delete(appUser);
