@@ -3,6 +3,7 @@ package com.tove.enterprise_project.controller;
 import com.tove.enterprise_project.model.dto.AppUserDTO;
 import com.tove.enterprise_project.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +37,15 @@ public class AdminController {
 
 
     @DeleteMapping("delete-user")
-    public ResponseEntity<AppUserDTO> deleteUser(String username) {
+    public ResponseEntity<String> deleteUser(@RequestParam String username) {
 
         return userService.adminDeleteUser(username);
+    }
+
+    @PostMapping("/create-admin")
+    public ResponseEntity<AppUserDTO> addUser(@RequestBody AppUserDTO appUserDTO, Authentication authentication) {
+
+        return userService.createAdminUser(appUserDTO, authentication);
     }
 
 

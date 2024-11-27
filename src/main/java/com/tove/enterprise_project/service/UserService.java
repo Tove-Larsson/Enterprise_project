@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.tove.enterprise_project.authorities.UserRole.ADMIN;
 import static com.tove.enterprise_project.authorities.UserRole.USER;
 
 @Service
@@ -79,22 +80,49 @@ public class UserService {
 
     }
 
-    public ResponseEntity<AppUserDTO> adminDeleteUser(String username) {
+    @Transactional
+    public ResponseEntity<String> adminDeleteUser(String username) {
 
         Optional<AppUser> userToDelete = userDAO.findByUsername(username);
 
         if (userToDelete.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new UsernameNotFoundException(username + " could not be found");
         }
 
-            AppUser user = userToDelete.get();
+        AppUser appUser = userToDelete.get();
+        userRepository.delete(appUser);
 
-            userRepository.delete(user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(appUser.getUsername());
+    }
 
-            AppUserDTO userDTO = new AppUserDTO(
-                    user.getUsername()
-            );
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userDTO);
+    public ResponseEntity<AppUserDTO> createAdminUser(AppUserDTO appUserDTO, Authentication authentication) {
+
+        String currentUsername = authentication.getName();
+        AppUser currentUser = userDAO.findByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!currentUser.getUserRole().name().equals("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        if (userDAO.findByUsername(appUserDTO.username()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        AppUser newAdminUser = new AppUser(
+                appUserDTO.username(),
+                passwordEncoder.encode(appUserDTO.password()),
+                ADMIN,
+                true,
+                true,
+                true,
+                true
+
+        );
+
+        userRepository.save(newAdminUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(appUserDTO);
 
     }
 
