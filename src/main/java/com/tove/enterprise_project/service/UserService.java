@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.tove.enterprise_project.authorities.UserRole.USER;
 
 @Service
@@ -76,5 +78,27 @@ public class UserService {
         return new TokenDTO(generatedToken);
 
     }
+
+    public ResponseEntity<AppUserDTO> adminDeleteUser(String username) {
+
+        Optional<AppUser> userToDelete = userDAO.findByUsername(username);
+
+        if (userToDelete.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+            AppUser user = userToDelete.get();
+
+            userRepository.delete(user);
+
+            AppUserDTO userDTO = new AppUserDTO(
+                    user.getUsername()
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userDTO);
+
+    }
+
+
+
 }
 
