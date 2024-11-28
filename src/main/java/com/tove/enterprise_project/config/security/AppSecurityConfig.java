@@ -1,5 +1,6 @@
 package com.tove.enterprise_project.config.security;
 
+import com.tove.enterprise_project.jwt.CustomAccessDeniedHandler;
 import com.tove.enterprise_project.jwt.CustomAuthenticationEntryPoint;
 import com.tove.enterprise_project.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,16 @@ public class AppSecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtFilter jwtFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Autowired
-    public AppSecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService, CorsConfigurationSource corsConfigurationSource, JwtFilter jwtFilter, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+    public AppSecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService, CorsConfigurationSource corsConfigurationSource, JwtFilter jwtFilter, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailsService = customUserDetailsService;
         this.corsConfigurationSource = corsConfigurationSource;
         this.jwtFilter = jwtFilter;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -59,6 +62,7 @@ public class AppSecurityConfig {
                 .authenticationProvider(authProvider())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 );
 
         return http.build();
