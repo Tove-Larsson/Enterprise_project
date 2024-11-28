@@ -70,16 +70,6 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new AppUserDTO(appUser.getUsername()));
     }
 
-    public TokenDTO verify(AppUserDTO appUserDTO) {
-
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(appUserDTO.username(), appUserDTO.password()));
-
-        String generatedToken = jwtService.generateToken(appUserDTO.username());
-        System.out.println("Generated token: " + generatedToken);
-        return new TokenDTO(generatedToken);
-
-    }
-
     @Transactional
     public ResponseEntity<String> adminDeleteUser(String username) {
 
