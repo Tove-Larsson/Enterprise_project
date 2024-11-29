@@ -21,4 +21,15 @@ public class UserDAO {
                 .getResultStream()
                 .findFirst();
     }
+
+    public Optional<AppUser> findByIgnoreCase(String username) {
+        System.out.println("Custom DAO Query");
+        String query = "SELECT u FROM AppUser u WHERE u.username ILIKE :username";
+
+        return entityManager.createQuery(query, AppUser.class)
+                .setParameter("username", username)
+                .getResultStream()
+                .findFirst();
+    }
+
 }

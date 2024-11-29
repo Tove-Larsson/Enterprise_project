@@ -51,7 +51,7 @@ public class UserService {
                 true
         );
 
-        if (userDAO.findByUsername(appUser.getUsername()).isPresent()) {
+        if (userDAO.findByIgnoreCase(appUser.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -95,7 +95,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (userDAO.findByUsername(appUserDTO.username()).isPresent()) {
+        if (userDAO.findByIgnoreCase(appUserDTO.username()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
