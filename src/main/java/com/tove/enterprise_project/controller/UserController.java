@@ -28,7 +28,7 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/deleteUser")
+    @DeleteMapping("/delete-user")
     public ResponseEntity<AppUserDTO> deleteUser(Authentication authentication) {
         return userService.deleteAuthenticatedUser(authentication);
     }
