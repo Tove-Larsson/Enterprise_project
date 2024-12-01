@@ -1,5 +1,8 @@
 package com.tove.enterprise_project.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.LocalDateTime;
 
 public class ApiGameDTO {
@@ -8,6 +11,8 @@ public class ApiGameDTO {
     private String name;
     private String storyline;
     private double rating;
+    @JsonProperty("first_release_date")
+    @JsonDeserialize(using = UnixTimestampDeserializer.class)
     private LocalDateTime firstReleaseDate;
 
     public ApiGameDTO() {}
