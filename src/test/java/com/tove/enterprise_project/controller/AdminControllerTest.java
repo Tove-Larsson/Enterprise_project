@@ -15,7 +15,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import static com.tove.enterprise_project.authorities.UserRole.USER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -35,16 +34,13 @@ class AdminControllerTest {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserService userService;
-
     private final UserDAO userDAO;
 
     @Autowired
-    AdminControllerTest(MockMvc mockMvc, UserRepository userRepository, PasswordEncoder passwordEncoder, UserService userService, UserDAO userDAO) {
+    AdminControllerTest(MockMvc mockMvc, UserRepository userRepository, PasswordEncoder passwordEncoder, UserDAO userDAO) {
         this.mockMvc = mockMvc;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
         this.userDAO = userDAO;
     }
 
@@ -97,6 +93,31 @@ class AdminControllerTest {
                         .param("username", "nonExistentUser"))
                 .andExpect(content().string(containsString("nonExistentUser could not be found")));
     }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    @DisplayName("Test delete User as a User")
+    public void testDeleteUserAsUser() throws Exception {
+        mockMvc.perform(delete("/admin/delete-user")
+                        .param("username", "TestUser"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Test creating admin user as an Admin")
+    public void testCreateAdmin() throws Exception {
+        mockMvc.perform(post("/admin/create-admin")
+                        .contentType("application/json")
+                        .content(""" 
+                                {
+                                  "username": "Grisen",
+                                  "password": "TestPassword"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+    }
+
 }
 
 

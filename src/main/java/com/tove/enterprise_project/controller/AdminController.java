@@ -43,10 +43,9 @@ public class AdminController {
     }
 
     @PostMapping("/create-admin")
-    public ResponseEntity<AppUserDTO> addUser(@RequestBody AppUserDTO appUserDTO, Authentication authentication) {
+    public ResponseEntity<AppUserDTO> addUser(@RequestBody AppUserDTO appUserDTO) {
 
-        return userService.createAdminUser(appUserDTO, authentication);
+        return userService.createAdminUser(appUserDTO);
     }
-
 
 }

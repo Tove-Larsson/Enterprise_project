@@ -81,15 +81,7 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(appUser.getUsername());
     }
 
-    public ResponseEntity<AppUserDTO> createAdminUser(AppUserDTO appUserDTO, Authentication authentication) {
-
-        String currentUsername = authentication.getName();
-        AppUser currentUser = userDAO.findByUsername(currentUsername)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        if (!currentUser.getUserRole().name().equals("ADMIN")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    public ResponseEntity<AppUserDTO> createAdminUser(AppUserDTO appUserDTO) {
 
         if (userDAO.findByIgnoreCase(appUserDTO.username()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
