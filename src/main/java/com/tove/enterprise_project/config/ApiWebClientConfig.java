@@ -11,6 +11,6 @@ public class ApiWebClientConfig {
     public WebClient.Builder webClientBuilder() {
         return WebClient
                 .builder()
-                .baseUrl("http://localhost:8443");
+                .baseUrl("http://host.docker.internal:8443");
     }
 }
